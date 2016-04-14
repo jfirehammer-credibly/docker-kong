@@ -11,6 +11,13 @@ VOLUME ["/etc/kong/"]
 
 COPY config.docker/kong.yml /etc/kong/kong.yml
 
-CMD kong start
+ENV TINI_VERSION v0.9.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
+CMD ["kong", "start"]
+
+# CMD kong start
 
 EXPOSE 8000 8443 8001 7946
